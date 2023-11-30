@@ -1,3 +1,6 @@
+# CS 480 Deployment Script
+# by Flint Million (11-28-2023)
+
 import os
 import os.path
 import shutil

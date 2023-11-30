@@ -7,6 +7,9 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
+    - name: show environment
+      run: env
+      shell: bash
     - name: Run the deployment script
       run: python src/deploy.py "${{ github.workspace }}"
       working-directory: ${{ github.action_path }}
