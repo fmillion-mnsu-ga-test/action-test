@@ -28,18 +28,18 @@ os.chdir(DOCKER_PATH)
 # If a docker-compose file already exists, take down the stack
 if os.path.isfile(os.path.join(DOCKER_PATH,"docker-compose.yml")):
     print("Shutting down existing Docker stack.")
-    subprocess.run(["docker","compose","down"],stderr=sys.stdout.buffer)
+    subprocess.run(["docker","compose","down"],stderr=subprocess.STDOUT)
 
 # Copy the entire repository to this directory
 print("Copying your project to the Docker service directory.")
-retcode = subprocess.call(["rsync","-art","--delete",SRC_PATH+"/",DOCKER_PATH+"/"],stderr=sys.stdout.buffer)
+retcode = subprocess.call(["rsync","-art","--delete",SRC_PATH+"/",DOCKER_PATH+"/"],stderr=subprocess.STDOUT)
 if retcode:
     print("ERROR: Something went wrong copying files. Check with the developer - it may not be your fault.")
     exit(1)
 
 # Start up the stack!
 print("Starting up your Docker stack.")
-retcode = subprocess.call(["docker","compose","up","-d","--remove-orphans"],stderr=sys.stdout.buffer)
+retcode = subprocess.call(["docker","compose","up","-d","--remove-orphans"],stderr=subprocess.STDOUT)
 if retcode:
     print("ERROR: Something went wrong starting your stack. Check syntax and re-check the instructions and try again!")
     exit(1)
