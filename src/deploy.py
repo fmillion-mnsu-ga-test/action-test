@@ -28,16 +28,22 @@ os.chdir(DOCKER_PATH)
 # If a docker-compose file already exists, take down the stack
 if os.path.isfile(os.path.join(DOCKER_PATH,"docker-compose.yml")):
     print("Shutting down existing Docker stack.")
-    os.system("docker compose down")
-    print("Finished!")
+    subprocess.run(["docker","compose","down"],stderr=sys.stdout.buffer)
 
 # Copy the entire repository to this directory
-subprocess.run(["rsync","-art","--delete",SRC_PATH+"/",DOCKER_PATH+"/"])
-print("Copied project to Docker service directory.")
+print("Copying your project to the Docker service directory.")
+retcode = subprocess.call(["rsync","-art","--delete",SRC_PATH+"/",DOCKER_PATH+"/"],stderr=sys.stdout.buffer)
+if retcode:
+    print("ERROR: Something went wrong copying files. Check with the developer - it may not be your fault.")
+    exit(1)
 
 # Start up the stack!
-print("Starting up the new Docker stack...")
-os.system("docker compose up -d --remove-orphans")
+print("Starting up your Docker stack.")
+retcode = subprocess.call(["docker","compose","up","-d","--remove-orphans"],stderr=sys.stdout.buffer)
+if retcode:
+    print("ERROR: Something went wrong starting your stack. Check syntax and re-check the instructions and try again!")
+    exit(1)
 print("Finished!")
 
-print("Deployment task completed successfully!")
+print("Deployment task completed successfully! If all went well you should be able to access your site as per the instructions.")
+exit(0)
