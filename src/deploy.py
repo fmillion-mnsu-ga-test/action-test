@@ -32,7 +32,7 @@ if os.path.isfile(os.path.join(DOCKER_PATH,"docker-compose.yml")):
     print("Finished!")
 
 # Copy the entire repository to this directory
-subprocess.run(["rsync","--delete",SRC_PATH+"/",DOCKER_PATH+"/"])
+subprocess.run(["rsync","-art","--delete",SRC_PATH+"/",DOCKER_PATH+"/"])
 print("Copied project to Docker service directory.")
 
 # Start up the stack!
