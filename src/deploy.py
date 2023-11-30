@@ -1,18 +1,42 @@
 import os
+import os.path
+import shutil
 import sys
 
-print("The deploy script has started successfully!\n")
+print("Now deploying your CS 480 project...")
 
-print(f"The following path was provided: {sys.argv[1]}\n")
+if len(sys.argv) < 2:
+    print("ERROR: script invocation error, please contact developer.")
+    exit(1)
 
-print("Environment variables:")
-environ_keys = sorted(dict(os.environ).keys())
-environ_maxlen = max([len(x) for x in environ_keys])
+SRC_PATH = sys.argv[1]
+if not os.path.isfile(os.path.join(SRC_PATH,"docker-compose.yml")):
+    print("ERROR: You don't have a Docker Compose file in your repository!")
+    exit(1)
 
-for k in environ_keys:
-    print(f"    {k:{environ_maxlen}s} : {os.environ[k]}")
+GH_USER = os.environ["GITHUB_ACTOR"]
+print(f"Your GitHub user: {GH_USER}")
 
-print()
+# Make directory for the user if it does not exist
+DOCKER_PATH=f"/managed/{GH_USER}"
+os.makedirs(DOCKER_PATH,exist_ok=True)
 
-print("The deploy task finished.")
-exit(0)
+# switch to the new directory
+os.chdir(DOCKER_PATH)
+
+# If a docker-compose file already exists, take down the stack
+if os.path.isfile(os.path.join(DOCKER_PATH,"docker-compose.yml")):
+    print("Shutting down existing Docker stack.")
+    os.system("docker compose down")
+    print("Finished!")
+
+# Copy the entire repository to this directory
+shutil.copytree(SRC_PATH,DOCKER_PATH)
+print("Copied project to Docker service directory.")
+
+# Start up the stack!
+print("Starting up the new Docker stack...")
+os.system("docker compose up -d --remove-orphans")
+print("Finished!")
+
+print("Deployment task completed successfully!")
