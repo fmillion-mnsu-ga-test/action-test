@@ -1,7 +1,9 @@
 import os
-
+import sys
 
 print("The deploy script has started successfully!\n")
+
+print(f"The following path was provided: {sys.argv[1]}\n")
 
 print("Environment variables:")
 environ_keys = sorted(dict(os.environ).keys())
