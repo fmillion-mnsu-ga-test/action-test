@@ -1,6 +1,7 @@
 import os
 import os.path
 import shutil
+import subprocess
 import sys
 
 print("Now deploying your CS 480 project...")
@@ -31,7 +32,7 @@ if os.path.isfile(os.path.join(DOCKER_PATH,"docker-compose.yml")):
     print("Finished!")
 
 # Copy the entire repository to this directory
-shutil.copytree(SRC_PATH,DOCKER_PATH)
+subprocess.run(["rsync","--delete",SRC_PATH+"/",DOCKER_PATH+"/"])
 print("Copied project to Docker service directory.")
 
 # Start up the stack!
