@@ -9,6 +9,7 @@ runs:
         python-version: '3.10'
     - name: Show files in the original source code
       run: find ${{ github.workspace }}
+      shell: bash
     - name: Run the Python script
       run: python src/deploy.py
       shell: bash
