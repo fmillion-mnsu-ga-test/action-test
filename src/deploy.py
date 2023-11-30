@@ -1,6 +1,11 @@
 # CS 480 Deployment Script
 # by Flint Million (11-28-2023)
 
+# This deploys a CS 480 Quiz 2 project on the server.
+# It must be run as part of a GitHub action!
+
+# Dependencies
+#   - 
 import os
 import os.path
 import shutil
@@ -9,11 +14,7 @@ import sys
 
 print("Now deploying your CS 480 project...")
 
-if len(sys.argv) < 2:
-    print("ERROR: script invocation error, please contact developer.")
-    exit(1)
-
-SRC_PATH = sys.argv[1]
+SRC_PATH = os.environ["GITHUB_WORKSPACE"]
 if not os.path.isfile(os.path.join(SRC_PATH,"docker-compose.yml")):
     print("ERROR: You don't have a Docker Compose file in your repository!")
     exit(1)
